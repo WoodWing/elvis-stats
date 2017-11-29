@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { SearchResponse } from 'elasticsearch';
 import bytes = require('bytes');
-import { Api } from './Api';
+import { Api } from './api';
 
 export class FolderSizeApi extends Api {
 

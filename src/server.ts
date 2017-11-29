@@ -8,7 +8,7 @@ import http = require('http');
 import { Application } from 'express';
 import bodyParser = require('body-parser');
 import { Config } from './config';
-import { ApiManager } from './api-manager'
+import { ApiManager } from './api/api-manager'
 
 /**
  * Singleton server class
