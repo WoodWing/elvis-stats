@@ -1,15 +1,16 @@
 /**
  * Start web server and entry point for API requests.
  */
+import bodyParser = require('body-parser');
+import express = require('express');
+import { Application } from 'express';
+import http = require('http');
+
+import { ApiManager } from './api/api-manager';
+import { Config } from './config';
+
 
 require("console-stamp")(console, { pattern: "dd-mm-yyyy HH:MM:ss.l" });
-import express = require('express');
-import http = require('http');
-import { Application } from 'express';
-import bodyParser = require('body-parser');
-import { Config } from './config';
-import { ApiManager } from './api/api-manager'
-
 /**
  * Singleton server class
  */
