@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<info>
+		<version>
+			<pluginVersion>1.0</pluginVersion>
+			<requiresAtLeast>6.7.0.0</requiresAtLeast>
+		</version>
+		<description>Folder statistics</description>
+		<documentationUrl></documentationUrl>
+	</info>
+	<panel>
+		<url>${pluginUrl}/index.html</url>
+		
+		<iconUrl>${pluginUrl}/icon.svg</iconUrl>
+
+		<panelLocations>
+			<panelLocation id="mainRightPanel" order="2"/>
+		</panelLocations>
+
+		<requiredRoles>
+			<role>ROLE_STATS</role>
+		</requiredRoles>
+
+		<messages>
+			<entries locale="en_US">
+				<entry key="title">Folder statistics</entry>
+				<entry key="button.tooltip">Open the folder stats</entry>
+			</entries>
+		</messages>
+
+	</panel>
+</plugin>

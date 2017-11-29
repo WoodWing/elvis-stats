@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <info>
+    <version>
+      <pluginVersion>1.0</pluginVersion>
+      <requiresAtLeast>6.7.0.0</requiresAtLeast>
+    </version>
+    <description></description>
+  </info>
+  <api>
+    <url>http://localhost:9094/api</url>
+    <requiredRoles>
+      <role>ROLE_STATS</role>
+    </requiredRoles>
+  </api>
+</plugin>
