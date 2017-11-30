@@ -49,8 +49,8 @@
 		function getRow(field, fieldValue, duplicates) {
 			return `
 				<tr>
-						<td><a href="#" data-field="${field}" data-field-value="${escapeHtml(fieldValue)}">${escapeHtml(fieldValue)}</a></td>
-						<td>${duplicates}</td>
+						<td class="fieldValue"><a href="#" data-field="${field}" data-field-value="${escapeHtml(fieldValue)}">${escapeHtml(fieldValue)}</a></td>
+						<td class="duplicateCount">${duplicates}</td>
 				</tr>
 			`
 		}
@@ -133,6 +133,10 @@
 			padding: 0 10px;
 			border-bottom: 1px solid #e2e2e2;
 			background-color: #ffffff
+		}
+
+		.fieldValue {
+			width: 720px;
 		}
 
 		a {
