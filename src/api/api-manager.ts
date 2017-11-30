@@ -1,5 +1,7 @@
-import { Router, Application } from 'express';
 import { Client } from 'elasticsearch';
+import { Application, Router } from 'express';
+
+import { DuplicateApi } from './duplicate-api';
 import { FolderSizeApi } from './folder-size-api';
 
 export class ApiManager {
@@ -10,7 +12,7 @@ export class ApiManager {
   constructor(public app:Application) {
     this.client = new Client({
       host: 'localhost:9200',
-      log: 'trace'
+      log: 'info'
     });
     this.router = Router();
     // Prefix all API's with /api
@@ -22,16 +24,17 @@ export class ApiManager {
    * Add API routes
    */
   private addRoutes(): void {
-
-    new FolderSizeApi(this.router, this.client).addRoute();
-
-    // API logging
+    
+    // API Request logging
     this.router.use((req, res, next) => {
       // Keep the compiler happy
       res = res;
-      console.info('API call received: ' + req.method + ' "' + req.originalUrl + '" with params: ' + JSON.stringify(req.params));
+      console.info('API call received: ' + req.method + ' "' + req.originalUrl);
       next();
     });
+ 
+    new FolderSizeApi(this.router, this.client).addRoute();
+    new DuplicateApi(this.router, this.client).addRoute();
   }
 
   // private usageStats() {

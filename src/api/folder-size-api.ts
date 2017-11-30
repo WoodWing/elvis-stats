@@ -5,49 +5,62 @@ import { Request, Response } from 'express';
 import { Api } from './api';
 
 export class FolderSizeApi extends Api {
-
+  
   public addRoute():void {
-    this.router.get('/folder-stats', (req:Request, res:Response) => {
-      if (!req.query.folderPath) {
-        return res.status(422).send('Required parameter folderPath is missing');
-      }
+    this.router.get('/folder-stats', this.checkRequiredParams(['folderPath']), (req:Request, res:Response) => {
 
-      let folderPath:string = req.query.folderPath.toLowerCase();
-      if (!folderPath.startsWith('/')) {
-        folderPath = '/' + folderPath;
+      let folderPath:string = req.query.folderPath;
+      let query:any;
+      let includeRegEx:string;
+      
+      if(folderPath === '/') {
+        // Get info for root zone
+        folderPath = '/';
+        query = {
+          match_all : {}
+        };
+        includeRegEx = '^/*/[^/]+$';
       }
-      if (folderPath.endsWith('/')) {
-        folderPath = folderPath.substring(0, folderPath.length -1);
+      else {
+        // Get info for sub folder
+        if (!folderPath.startsWith('/')) {
+          folderPath = '/' + folderPath;
+        }
+        if (folderPath.endsWith('/')) {
+          folderPath = folderPath.substring(0, folderPath.length - 1);
+        }
+        query = {
+          terms: {
+            ancestorPaths: [
+              folderPath
+            ]
+         }
+        };
+        includeRegEx = '^' + this.escapeRegEx(folderPath.toLowerCase()) + '/[^/]+$';
       }
-
-      let num:number = Math.min(100, Number(req.query.num));
+      
+      let size:number = this.getSizeParam(req.query.size);
     
       this.client.search({
         index: 'asset',
         type: 'asset',
         body: {
-          'query': {
-             'terms': {
-                'ancestorPaths': [
-                  folderPath
-                ]
-             }
-          },
-          'size': 0,
-          'aggregations': {
-             'folders': {
-                'terms': {
-                   'field': 'ancestorPaths',
-                   'include': '^' + this.escapeRegEx(folderPath) + '/[^/]+$',
-                   'order': {
-                      'folder_size': 'desc'
+          query,
+          size: 0,
+          aggregations: {
+             folders: {
+                terms: {
+                   field: 'ancestorPaths',
+                   include: includeRegEx,
+                   order: {
+                      folder_size: 'desc'
                    },
-                   'size': num
+                   size: size
                 },
-                'aggregations': {
-                   'folder_size': {
-                      'sum': {
-                         'field': 'fileSize'
+                aggregations: {
+                   folder_size: {
+                      sum: {
+                         field: 'fileSize'
                       }
                    }
                 }

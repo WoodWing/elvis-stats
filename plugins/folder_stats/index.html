@@ -83,9 +83,9 @@
 			if (pathParam.indexOf('ancestorPaths:"') > -1) {
 				var regex = new RegExp('"([^"]*)"');
 				var results = regex.exec(pathParam);
-				return results === null ? '' : results[1].replace(/\\/g, '/');
+				return results === null ? '/' : results[1].replace(/\\/g, '/');
 			}
-			return '';
+			return '/';
 		}
 
 		function loadFolderStats() {
@@ -152,7 +152,6 @@
 
 		$(function () {
 			elvisContext = ElvisPlugin.resolveElvisContext();
-			//elvisContext.updateCallback = selectionUpdated;
 			elvisApi = new ElvisAPI("${serverUrl}");
 			createChart();
 			parent.window.onhashchange = selectionUpdated;
