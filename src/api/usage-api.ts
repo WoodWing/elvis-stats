@@ -3,8 +3,50 @@ import { Request, Response } from 'express';
 
 import { Api } from './api';
 
+/**
+ * Get Elvis usage statistics in a date histogram
+ * 
+ * Endpoint:
+ * ../usage
+ * 
+ * Query parameters:
+ * @startDate (string): Stats start date in dd/mm/yyyy format
+ * @endDate (string): Stats end date in dd/mm/yyyy format
+ * @interval (string): Interval period, valid values are "year", "month", "week" and "day"
+ * 
+ * Example:
+ * ../usage?startDate=01-01-2017&endDate=31-12-2017&interval=month
+ * 
+ * Response:
+ * [{
+ *      "period": "August 2017",
+ *      "actions": [
+ *          {
+ *              "action": "METADATA_UPDATE",
+ *              "count": 175
+ *          },
+ *          {
+ *              "action": "CREATE",
+ *              "count": 13
+ *          }
+ *      ]
+ *  },
+ *  {
+ *      "period": "October 2017",
+ *      "actions": [
+ *          {
+ *              "action": "METADATA_UPDATE",
+ *               "count": 465
+ *          },
+ *          {
+ *              "action": "CREATE_RELATION",
+ *              "count": 83
+ *          }
+ *      ]
+ *  }]
+ */
 export class UsageApi extends Api {
-  
+
   public addRoute():void {
     this.router.get('/usage', (req:Request, res:Response) => {
 

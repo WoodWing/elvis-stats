@@ -4,6 +4,31 @@ import { Request, Response } from 'express';
 
 import { Api } from './api';
 
+/**
+ * Get (sub)-folder size statistics
+ * 
+ * Endpoint:
+ * ../folder-stats
+ * 
+ * Query parameters:
+ * @folderPath (string): Folder to get stats for
+ * @size (number): Maximum number of results
+ * 
+ * Example:
+ * ../folder-stats?folderPath=/demo%20zone&size=20
+ * 
+ * Response:
+ * [{
+ *      "name": "/demo zone/images",
+ *      "size": 204464523,
+ *      "sizeFormatted": "194.99MB"
+ *  },
+ *  {
+ *      "name": "/demo zone/video",
+ *      "size": 55335922,
+ *      "sizeFormatted": "52.77MB"
+ *  }]
+ */
 export class FolderSizeApi extends Api {
   
   public addRoute():void {

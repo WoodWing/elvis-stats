@@ -38,38 +38,4 @@ export class ApiManager {
     new DuplicateApi(this.router, this.client).addRoute();
     new UsageApi(this.router, this.client).addRoute();
   }
-
-  // private usageStats() {
-  //   this.router.post('/usage-stats', (req:Request, res:Response) => {
-  //     req=req;
-
-  //     this.client.search({
-  //       index: 'stats',
-  //       type: 'StatsUsage',
-  //       body: {
-  //         'size': 0, 
-  //         'aggregations' : {
-  //           'action_date_range' : {
-  //             'date_histogram' : {
-  //               'field' : 'logDate',
-  //               'interval' : 'month',
-  //               'format' : 'MMMM yyyy'
-  //             },
-  //             'aggregations' : {
-  //               'action_usage' : {
-  //                 'terms' : {
-  //                   'field' : 'action'
-  //                 }
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }).then((sr:SearchResponse<{}>) => {
-  //       res.status(200).json(sr);
-  //     }).catch((error:any) => {
-  //       res.status(500).send(error.message);
-  //     });
-  //   });
-  // }
 }

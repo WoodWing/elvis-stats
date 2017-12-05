@@ -3,6 +3,29 @@ import { Request, Response } from 'express';
 
 import { Api } from './api';
 
+/**
+ * Detect duplicate assets
+ * 
+ * Endpoint:
+ * ../detect-duplicates
+ * 
+ * Query parameters:
+ * @field (string): Field to perform duplicate detection on, valid values are: "filename", "fileSize" and "firstExtractedChecksum"
+ * @size (number): Maximum number of results
+ * 
+ * Example:
+ * ../detect-duplicates?field=filename&size=50
+ * 
+ * Response:
+ * [{
+ *      "fieldValue": "parade.jpg",
+ *      "duplicates": 5
+ *  },
+ *  {
+ *      "fieldValue": "louvre.jpg",
+ *      "duplicates": 2
+ *  }]
+ */
 export class DuplicateApi extends Api {
 
   private static readonly ALLOWED_FIELDS:string[] = ['filename', 'fileSize', 'firstExtractedChecksum'];
