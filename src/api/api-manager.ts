@@ -3,6 +3,7 @@ import { Application, Router } from 'express';
 
 import { DuplicateApi } from './duplicate-api';
 import { FolderSizeApi } from './folder-size-api';
+import { UsageApi } from './usage-api';
 
 export class ApiManager {
 
@@ -35,6 +36,7 @@ export class ApiManager {
  
     new FolderSizeApi(this.router, this.client).addRoute();
     new DuplicateApi(this.router, this.client).addRoute();
+    new UsageApi(this.router, this.client).addRoute();
   }
 
   // private usageStats() {

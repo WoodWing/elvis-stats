@@ -9,7 +9,7 @@ export class FolderSizeApi extends Api {
   public addRoute():void {
     this.router.get('/folder-stats', this.checkRequiredParams(['folderPath']), (req:Request, res:Response) => {
 
-      let folderPath:string = req.query.folderPath;
+      let folderPath:string = req.query.folderPath.toLowerCase();
       let query:any;
       let includeRegEx:string;
       
@@ -36,7 +36,7 @@ export class FolderSizeApi extends Api {
             ]
          }
         };
-        includeRegEx = '^' + this.escapeRegEx(folderPath.toLowerCase()) + '/[^/]+$';
+        includeRegEx = '^' + this.escapeRegEx(folderPath) + '/[^/]+$';
       }
       
       let size:number = this.getSizeParam(req.query.size);
@@ -69,11 +69,11 @@ export class FolderSizeApi extends Api {
        }
       }).then((sr:SearchResponse<{}>) => {
         let response = sr.aggregations.folders.buckets.map((folderBucket:any) => {
-           return {
+          return {
             name: folderBucket.key,
             size: folderBucket.folder_size.value,
             sizeFormatted: bytes(folderBucket.folder_size.value)
-           } 
+          } 
         });
         res.status(200).json(response);
       }).catch((error:any) => {

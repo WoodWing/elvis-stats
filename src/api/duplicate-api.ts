@@ -30,10 +30,10 @@ export class DuplicateApi extends Api {
         }
       }).then((sr:SearchResponse<{}>) => {
         let response = sr.aggregations.duplicates.buckets.map((duplicate:any) => {
-           return {
+          return {
             fieldValue: duplicate.key,
             duplicates: duplicate.doc_count,
-           } 
+          } 
         });
         res.status(200).json(response);
       }).catch((error:any) => {
