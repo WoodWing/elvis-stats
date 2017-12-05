@@ -19,7 +19,7 @@
 		</userInterface>
 
 		<menuAssignments>
-			<menuAssignment id="applicationMenu" order="1"/>
+			<menuAssignment id="toolBar" order="1"/>
 		</menuAssignments>
 
 		<requiredRoles>

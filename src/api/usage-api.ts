@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { Api } from './api';
 
 /**
- * Get Elvis usage statistics in a date histogram
+ * Get Elvis usage stats over a period of time
  * 
  * Endpoint:
  * ../usage

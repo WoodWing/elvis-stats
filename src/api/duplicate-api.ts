@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { Api } from './api';
 
 /**
- * Detect duplicate assets
+ * Find duplicate assets
  * 
  * Endpoint:
  * ../detect-duplicates
