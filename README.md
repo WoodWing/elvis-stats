@@ -39,7 +39,7 @@ The stats API plugin helps with securing the stats API. It ensures that only aut
 - Point the `url` setting to the stats server.
 - [Activate](https://helpcenter.woodwing.com/hc/en-us/articles/115002644606) the plugin.
 
-The stats API is now available through Elvis. For example, if your Elvis Server runs under https://elvis.mycompany.com, then the folder stats API will be available via https://elvis.mycompany.com/plugins/stats_api/folder-stats
+The stats API is now available through Elvis. For example, if your Elvis Server runs under https://elvis.mycompany.com, then the folder stats API will be available via https://elvis.mycompany.com/plugins/stats_api/folder-stats?folderPath=/your/path/here
 
 ## 3.3 Client plugins - display stats
 
