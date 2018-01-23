@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<info>
+		<version>
+			<pluginVersion>1.0</pluginVersion>
+			<requiresAtLeast>6.7.0.0</requiresAtLeast>
+		</version>
+		<description>Publish info &amp; seatch</description>
+		<documentationUrl></documentationUrl>
+	</info>
+	<panel>
+		<url>${pluginUrl}/index.html</url>
+		
+		<iconUrl>${pluginUrl}/icon.svg</iconUrl>
+
+		<panelLocations>
+			<panelLocation id="mainRightPanel" order="3"/>
+		</panelLocations>
+
+		<requiredRoles>
+			<role>ROLE_STATS</role>
+		</requiredRoles>
+
+		<messages>
+			<entries locale="en_US">
+				<entry key="title">Published in</entry>
+				<entry key="button.tooltip">Search published files and review publish history</entry>
+			</entries>
+		</messages>
+
+	</panel>
+</plugin>
