@@ -13,12 +13,50 @@
 		var elvisApi;
 		var elvisContext;
 		var selectedValues = [];
-		
+		var selectedHits;
+
 		function selectionUpdated() {
 			if (!elvisContext || !parent) {
 				// Plugin is no longer active
 				return;
 			}
+			selectedHits = elvisContext.activeTab.originalAssetSelection;
+			populatePublishedInPanel();
+			showCorrectPanel();
+		}
+
+		function populatePublishedInPanel() {
+			if (selectedHits.length != 1) {
+				$('#publishedIn').html('<div class="#invalidSelection">Select one file</div>');
+				return;
+			}
+			$.ajax({
+				type: 'GET',
+				url: '/plugins/stats_api/publish/stats/' + selectedHits[0].id,
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				success: function (response) {
+
+					var html = response.map((hit) => {
+						//TODO: cleanup
+						var itemHtml = '<div class="statRecord">'
+							+ '<div class="statField"><span class="statFieldLabel">Publication date:</span> <span class="statFieldValue">' + hit.publicationDate + '</span></div>'
+							+ '<div class="statField"><span class="statFieldLabel">Brand:</span> <span class="statFieldValue">' + hit.brand + '</span></div>';
+						if (hit.target) {
+							itemHtml += '<div class="statField"><span class="statFieldLabel">Target:</span> <span class="statFieldValue">' + hit.target + '</span></div>';
+						}
+						if (hit.issue) {
+							itemHtml += '<div class="statField"><span class="statFieldLabel">Issue:</span> <span class="statFieldValue">' + hit.issue + '</span></div>';
+						}
+						itemHtml += '</div>';
+						return itemHtml;
+					}).join('');
+					$('.publishedIn').html(html);
+				},
+				error: function (jqXHR, textStatus, error) {
+					console.log('API request failed: ' + JSON.stringify(jqXHR));
+				}
+			});
 		}
 
 		function populateSearchFields() {
@@ -32,7 +70,7 @@
 			$('#startDate').datepicker();
 			$('#endDate').datepicker();
 		}
-		
+
 		function search() {
 			loadCategories(true);
 		}
@@ -53,7 +91,7 @@
 
 			$.ajax({
 				type: 'GET',
-				url: '/plugins/stats_api/publish/stats',
+				url: '/plugins/stats_api/publish/statsSearch',
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
 				data: params,
@@ -75,9 +113,15 @@
 				if (hits.length == 0) {
 					hits[0] = { assetId: 'nothingfound' };
 				}
-				query = 'id:' + hits.map(hit => hit.assetId).join(' OR id:');
+				var uniqueAssetIds = hits.reduce((idArray, hit) => {
+					if (idArray.indexOf(hit.assetId) < 0) {
+						idArray.push(hit.assetId);
+					}
+					return idArray;
+				}, []);
+				query = 'id:' + uniqueAssetIds.join(' OR id:');
 			}
-			console.log('query = ' + query)
+			// console.log('query = ' + query)
 			elvisContext.openSearch(query);
 		}
 
@@ -94,7 +138,7 @@
 		function fillSelect(name, facets) {
 			var options = '<option></option>\n';
 			var selectedIdx = -1;
-			for (var i=0; i<facets.length; i++) {
+			for (var i = 0; i < facets.length; i++) {
 				var facetField = facets[i];
 				var facet = facetField[name] ? facetField[name] : facetField;
 				options += '<option value="' + facet.name + '"';
@@ -102,20 +146,20 @@
 					selectedIdx = i;
 					options += ' selected';
 				}
-				options	+= '>' + facet.name + ' (' + facet.count + ')</option>';
+				options += '>' + facet.name + ' (' + facet.count + ')</option>';
 			}
 			$('#' + name).html(options);
 			return selectedIdx;
 		}
 
-		function showCorrectPanel() {
-			if (folderPath) {
-				hide('.noSelection');
-				show('.folderPanel');
+		function showCorrectPanel(forceOpenSearchPanel) {
+			if (forceOpenSearchPanel || selectedHits.length == 0) {
+				hide('.detailPanel');
+				show('.searchPanel');
 			}
 			else {
-				hide('.folderPanel');
-				show('.noSelection');
+				hide('.searchPanel');
+				show('.detailPanel');
 			}
 		}
 
@@ -133,22 +177,25 @@
 
 			$('#startDate').change(search);
 			$('#endDate').change(search);
-			$('#brand').change(function() {
+			$('#brand').change(function () {
 				selectedValues['brand'] = $(this).val();
 				selectedValues['issue'] = '';
 				selectedValues['target'] = '';
 				search();
 			});
-			$('#issue').change(function() {
+			$('#issue').change(function () {
 				selectedValues['issue'] = $(this).val();
 				search();
 			});
-			$('#target').change(function() {
+			$('#target').change(function () {
 				selectedValues['target'] = $(this).val();
 				search();
 			});
+			$('.backToSearch').click(function () {
+				showCorrectPanel(true);
+			});
 
-			parent.window.onhashchange = selectionUpdated;
+			elvisContext.updateCallback = selectionUpdated;
 			selectionUpdated();
 			populateSearchFields();
 			loadCategories(false);
@@ -166,8 +213,7 @@
 		}
 
 		html,
-		body,
-			{
+		body {
 			width: 100%;
 			height: 100%;
 			margin: 0px;
@@ -193,10 +239,13 @@
 		.searchPanel,
 		.detailPanel,
 		.noSelection {
-			padding: 10px 20px;
 			width: 100%;
 			height: 100%;
 			flex-direction: column;
+		}
+
+		.searchPanel {
+			padding: 10px 20px;
 		}
 
 		.intro {
@@ -308,6 +357,29 @@
 			margin-top: 0px;
 		}
 
+		.backToSearch {
+			background-color: #f5f6f8;
+			text-align: center;
+			padding: 10px 0;
+			font-size: 16px;
+			cursor: pointer;
+		}
+
+		.publishedIn {
+			padding: 10px;
+		}
+
+		.statRecord {
+			margin-bottom: 10px;
+			padding: 5px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+		}
+
+		.statFieldValue {
+			font-weight: 700;
+		}
+
 		.empty-state {
 			display: flex;
 			justify-content: center;
@@ -351,7 +423,8 @@
 	</div>
 
 	<div class="detailPanel" style="display: none">
-
+		<div class="backToSearch">&larr; Search</div>
+		<div class="publishedIn"></div>
 	</div>
 
 </body>
