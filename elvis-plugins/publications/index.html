@@ -40,7 +40,7 @@
 					var html = response.map((hit) => {
 						//TODO: cleanup
 						var itemHtml = '<div class="statRecord">'
-							+ '<div class="statField"><span class="statFieldLabel">Publication date:</span> <span class="statFieldValue">' + hit.publicationDate + '</span></div>'
+							+ '<div class="statField"><span class="statFieldLabel">Publication date:</span> <span class="statFieldValue">' + hit.published__dt + '</span></div>'
 							+ '<div class="statField"><span class="statFieldLabel">Brand:</span> <span class="statFieldValue">' + hit.brand + '</span></div>';
 						if (hit.target) {
 							itemHtml += '<div class="statField"><span class="statFieldLabel">Target:</span> <span class="statFieldValue">' + hit.target + '</span></div>';

@@ -14,7 +14,7 @@ export abstract class PublishStatsBase extends Api {
         issue: hit.details.issue,
         edition: hit.details.edition,
         target: hit.details.target,
-        publicationDate: hit.details.publicationDate
+        published: hit.details.published__dt
       }
     });
   }

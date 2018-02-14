@@ -35,7 +35,7 @@ export class PublishStats extends PublishStatsBase {
             }
           },
           sort: {
-            'details.publicationDate': {
+            'details.published__dt': {
               order: 'desc'
             }
           }

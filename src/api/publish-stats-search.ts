@@ -17,7 +17,7 @@ export class PublishStatsSearch extends PublishStatsBase {
        * brand - Magazine A, Newspaper B, Book C, ...
        * issue - January 2018, Q2, Week 23, ...
        * target - Web, Print, App, Facebook, Instagram, Twitter, ...
-       * publicationDate - 2018-02-24, 2018-10-14 14:30:58
+       * published__dt - 2018-02-24, 2018-10-14 14:30:58
        */
 
       let allQueryParams: any[] = [];
@@ -29,7 +29,7 @@ export class PublishStatsSearch extends PublishStatsBase {
       this.addTermQuery([allQueryParams, issueParams, targetParams], 'details.brand', params.brand);
       this.addTermQuery([allQueryParams, brandParams, targetParams], 'details.issue', params.issue);
       this.addTermQuery([allQueryParams, brandParams, issueParams], 'details.target', params.target);
-      this.addDateRangeQuery([allQueryParams, brandParams, issueParams, targetParams], 'details.publicationDate', params.startDate, params.endDate);
+      this.addDateRangeQuery([allQueryParams, brandParams, issueParams, targetParams], 'details.published__dt', params.startDate, params.endDate);
 
       if (allQueryParams.length == 0) {
         res.status(500).send('Invalid request, no (valid) parameters specified');
@@ -82,7 +82,7 @@ export class PublishStatsSearch extends PublishStatsBase {
                                 uniqueAssetCount: uniqueAssetCount,
                                 pub_dates: {
                                   min: {
-                                    field: 'publicationDate'
+                                    field: 'details.published__dt'
                                   }
                                 }
                               }

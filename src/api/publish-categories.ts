@@ -34,7 +34,7 @@ export class PublishCategories extends Api {
                   aggregations: {
                     pub_dates: {
                       min: {
-                        field: 'publicationDate'
+                        field: 'published__dt'
                       }
                     }
                   }
