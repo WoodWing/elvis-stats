@@ -11,7 +11,7 @@
 	<panel>
 		<url>${pluginUrl}/index.html</url>
 		
-		<iconUrl>${pluginUrl}/icon.svg</iconUrl>
+		<iconUrl>${pluginUrl}/resources/icon.svg</iconUrl>
 
 		<panelLocations>
 			<panelLocation id="mainRightPanel" order="3"/>
