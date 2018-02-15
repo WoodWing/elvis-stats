@@ -41,7 +41,6 @@ export class PublishStats extends PublishStatsBase {
           }
         }
       };
-      // console.log(JSON.stringify(query, null, 2));
 
       this.client.search(query).then((sr: SearchResponse<{}>) => {
         let response = this.getHitsResponse(sr.hits);

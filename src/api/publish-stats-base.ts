@@ -10,10 +10,9 @@ export abstract class PublishStatsBase extends Api {
       let hit: any = rawHit._source;
       return {
         assetId: hit.assetId,
-        brand: hit.details.brand,
-        issue: hit.details.issue,
-        edition: hit.details.edition,
-        target: hit.details.target,
+        brand: hit.details.brand__s,
+        issue: hit.details.issue__s,
+        target: hit.details.target__s,
         published: hit.details.published__dt
       }
     });

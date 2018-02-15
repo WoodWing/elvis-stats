@@ -10,14 +10,14 @@ export class PublishStatsSearch extends PublishStatsBase {
     this.router.get('/publish/statsSearch', (req: Request, res: Response) => {
 
       let params: any = req.query;
-      let size: number = this.getSizeParam(req.query.size, 50, 950);
+      let size: number = this.getSizeParam(req.query.size, 50, 10000);
 
       /**
        * action - CUSTOM_ACTION_PUBLISH
        * brand - Magazine A, Newspaper B, Book C, ...
        * issue - January 2018, Q2, Week 23, ...
        * target - Web, Print, App, Facebook, Instagram, Twitter, ...
-       * published__dt - 2018-02-24, 2018-10-14 14:30:58
+       * start / end date - 2018-02-24, 2018-10-14 14:30:58
        */
 
       let allQueryParams: any[] = [];
@@ -26,9 +26,9 @@ export class PublishStatsSearch extends PublishStatsBase {
       let targetParams: any[] = [];
 
       this.addTermQuery([allQueryParams, brandParams, issueParams, targetParams], 'action', 'CUSTOM_ACTION_PUBLISH');
-      this.addTermQuery([allQueryParams, issueParams, targetParams], 'details.brand', params.brand);
-      this.addTermQuery([allQueryParams, brandParams, targetParams], 'details.issue', params.issue);
-      this.addTermQuery([allQueryParams, brandParams, issueParams], 'details.target', params.target);
+      this.addTermQuery([allQueryParams, issueParams, targetParams], 'details.brand__s', params.brand);
+      this.addTermQuery([allQueryParams, brandParams, targetParams], 'details.issue__s', params.issue);
+      this.addTermQuery([allQueryParams, brandParams, issueParams], 'details.target__s', params.target);
       this.addDateRangeQuery([allQueryParams, brandParams, issueParams, targetParams], 'details.published__dt', params.startDate, params.endDate);
 
       if (allQueryParams.length == 0) {
@@ -46,10 +46,8 @@ export class PublishStatsSearch extends PublishStatsBase {
         index: 'stats',
         type: 'StatsUsage',
         body: {
-          query: {
-            bool: {
-              must: allQueryParams
-            }
+          filter: {
+            and: allQueryParams
           },
           size: size,
           aggregations: {
@@ -61,50 +59,50 @@ export class PublishStatsSearch extends PublishStatsBase {
                   aggregations: {
                     filteredBrands: {
                       terms: {
-                        field: 'details.brand',
+                        field: 'details.brand__s',
                         order: {
                           _term: 'asc'
                         }
                       },
                       aggregations: {
+                        uniqueAssetCount: uniqueAssetCount
+                      }
+                    }
+                  }
+                },
+                issues: {
+                  filter: this.getFilter(issueParams),
+                  aggregations: {
+                    filteredIssues: {
+                      terms: {
+                        field: 'details.issue__s',
+                        order: {
+                          pub_dates: 'desc'
+                        }
+                      },
+                      aggregations: {
                         uniqueAssetCount: uniqueAssetCount,
-                        issues: {
-                          filter: this.getFilter(issueParams),
-                          aggregations: {
-                            filteredIssues: {
-                              terms: {
-                                field: 'details.issue',
-                                order: {
-                                  pub_dates: 'desc'
-                                }
-                              },
-                              aggregations: {
-                                uniqueAssetCount: uniqueAssetCount,
-                                pub_dates: {
-                                  min: {
-                                    field: 'details.published__dt'
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        targets: {
-                          filter: this.getFilter(targetParams),
-                          aggregations: {
-                            filteredTargets: {
-                              terms: {
-                                field: 'details.target',
-                                order: {
-                                  _term: 'asc'
-                                }
-                              },
-                              aggregations: {
-                                uniqueAssetCount: uniqueAssetCount
-                              }
-                            }
+                        pub_dates: {
+                          min: {
+                            field: 'details.published__dt'
                           }
                         }
+                      }
+                    }
+                  }
+                },
+                targets: {
+                  filter: this.getFilter(targetParams),
+                  aggregations: {
+                    filteredTargets: {
+                      terms: {
+                        field: 'details.target__s',
+                        order: {
+                          _term: 'asc'
+                        }
+                      },
+                      aggregations: {
+                        uniqueAssetCount: uniqueAssetCount
                       }
                     }
                   }
@@ -178,30 +176,21 @@ export class PublishStatsSearch extends PublishStatsBase {
       };
     }
     return {
-      bool: {
-        must: queryParams
-      }
+      and: queryParams
     };
   }
 
   private getAggregationsResponse(aggregations) {
-    if (!aggregations || !aggregations.allStats.brands.filteredBrands) {
+    if (!aggregations) {
       return [];
     }
-    return aggregations.allStats.brands.filteredBrands.buckets.map((brandBucket) => {
-      let brandFacet = {
-        brand: this.getFacet(brandBucket),
-        issue: [],
-        target: []
-      };
-      if (brandBucket.issues) {
-        brandFacet.issue = brandBucket.issues.filteredIssues.buckets.map(this.getFacet);
-      }
-      if (brandBucket.targets) {
-        brandFacet.target = brandBucket.targets.filteredTargets.buckets.map(this.getFacet);
-      }
-      return brandFacet;
-    });
+    let stats = aggregations.allStats;
+    let facets = {
+      brand: stats.brands.filteredBrands.buckets.map(this.getFacet),
+      issue: stats.issues.filteredIssues.buckets.map(this.getFacet),
+      target: stats.targets.filteredTargets.buckets.map(this.getFacet)
+    };
+    return facets;
   }
 
 }
