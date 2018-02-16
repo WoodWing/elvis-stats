@@ -1,6 +1,7 @@
 (function() {
   const MAX_STATS_RESULT_COUNT = 10000;
   const MAX_ASSET_COUNT = 900;
+  const BASE_URL = '/plugins/stats_api/publish';
  
   var elvisApi;
   var elvisContext;
@@ -20,7 +21,7 @@
   };
   
   function escapeHtml (string) {
-    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return String(string).replace(/[&<>"'`=\/]/g, (s) => {
       return entityMap[s];
     });
   }
@@ -71,20 +72,15 @@
     params.size = isFiltered ? MAX_STATS_RESULT_COUNT : 0;
 
     // Query stats API
-    $.ajax({
+    callStatsApi({
       type: 'GET',
-      url: '/plugins/stats_api/publish/statsSearch',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
+      url: BASE_URL + '/statsSearch',
       data: params,
-      success: function (response) {
+      success: (response) => {
         if (retrieveHits) {
           showHitsInClients(response.hits, clearSearch || !isFiltered);
         }
         showFacets(response.facets);
-      },
-      error: function (jqXHR, textStatus, error) {
-        console.log('API request failed: ' + JSON.stringify(jqXHR));
       }
     });
   }
@@ -176,12 +172,11 @@
       $('#publishedIn').html('<div class="#invalidSelection">Select one file</div>');
       return;
     }
-    $.ajax({
+    
+    callStatsApi({
       type: 'GET',
-      url: '/plugins/stats_api/publish/stats/' + selectedHits[0].id,
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: function (response) {
+      url: BASE_URL + '/stats/' + selectedHits[0].id,
+      success: (response) => {
         var html = response.map((hit) => {
           return '<div class="statRecord">'
             + renderFieldValue('Publication date', hit.published)
@@ -191,11 +186,17 @@
             + '</div>';
         }).join('');
         $('.publishedIn').html(html);
-      },
-      error: function (jqXHR, textStatus, error) {
-        console.log('API request failed: ' + JSON.stringify(jqXHR));
       }
     });
+  }
+
+  function callStatsApi(params) {
+    params.contentType = 'application/json; charset=utf-8';
+    params.dataType = 'json';
+    params.error = (jqXHR, textStatus, error) => {
+      console.log('API request failed: ' + JSON.stringify(jqXHR));
+    };
+    $.ajax(params);
   }
 
   /**
@@ -240,24 +241,24 @@
     // Add event handlers for inputs, when an input changes, perform a search
     $('#startDate').change(search);
     $('#endDate').change(search);
-    $('#brand').change(function () {
-      selectedFilterValues['brand'] = $(this).val();
+    $('#brand').change(() => {
+      selectedFilterValues['brand'] = $('#brand').val();
       selectedFilterValues['issue'] = '';
       selectedFilterValues['target'] = '';
       search();
     });
-    $('#issue').change(function () {
-      selectedFilterValues['issue'] = $(this).val();
+    $('#issue').change(() => {
+      selectedFilterValues['issue'] = $('#issue').val();
       search();
     });
-    $('#target').change(function () {
-      selectedFilterValues['target'] = $(this).val();
+    $('#target').change(() => {
+      selectedFilterValues['target'] = $('#target').val();
       search();
     });
-    $('.backToSearch').click(function () {
+    $('.backToSearch').click(() => {
       showCorrectPanel(true);
     });
-    $('#resetLink').click(function () {
+    $('#resetLink').click(() => {
       selectedFilterValues = [];
       searchStats(true, true);
     });
