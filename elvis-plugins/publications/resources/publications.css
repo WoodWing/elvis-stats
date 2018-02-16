@@ -126,13 +126,13 @@ select {
 }
 
 .ui-icon-circle-triangle-w {
-  background-image: url('resources/left.png') !important;
+  background-image: url('left.png') !important;
   background-repeat: no-repeat !important;
   cursor: pointer;
 }
 
 .ui-icon-circle-triangle-e {
-  background-image: url('resources/right.png') !important;
+  background-image: url('right.png') !important;
   background-repeat: no-repeat !important;
   cursor: pointer;
 }
