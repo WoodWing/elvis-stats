@@ -9,7 +9,7 @@
 		<documentationUrl></documentationUrl>
 	</info>
 	<panel>
-		<url>${pluginUrl}/index.html</url>
+		<url>${pluginUrl}/panel.html</url>
 		
 		<iconUrl>${pluginUrl}/resources/icon.svg</iconUrl>
 

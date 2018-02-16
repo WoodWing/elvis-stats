@@ -57,6 +57,7 @@
   function searchStats(retrieveHits, clearSearch) {
     
     // Gather search params
+    // TODO: use selectedFilterValues instead (this is doing the work twice)
     var isFiltered = false;
     var params = {};
     var paramNames = ['startDate', 'endDate', 'brand', 'issue', 'target'];
@@ -95,24 +96,39 @@
   function showHitsInClients(statsHits, clearSearch) {
     if (clearSearch) {
       elvisContext.openSearch('');
-      $('#totalStats').html();
+      showNotice('No search active');
       return;
     }
-    $('#totalStats').html('Publish count: ' + statsHits.length);  
     if (statsHits.length == 0) {
       // TODO: Not a really nice way to say we didn't find anything...
       elvisContext.openSearch('assetId:"nothingfound"');
+      showNotice('No published files found');
       return;
     }
     
     var uniqueAssetIds = [];
     var i=0;
-    while (uniqueAssetIds.length < MAX_ASSET_COUNT && i < statsHits.length) {
+    while (i < statsHits.length) {
       if (uniqueAssetIds.indexOf(statsHits[i].assetId) == -1) {
         uniqueAssetIds.push(statsHits[i].assetId);
       }
       i++;
     }
+    // var uniqueAssetIds = statsHits.reduce((assetIds, statsHit) => { 
+    //   if (assetIds.indexOf(statsHit.assetId) > -1) {
+    //     assetIds.push(statsHit.assetId);
+    //   }
+    //   return assetIds;
+    // }, {});
+
+    if (uniqueAssetIds.length > MAX_ASSET_COUNT) {
+      showNotice(uniqueAssetIds.length + ' published files found, showing the top ' + MAX_ASSET_COUNT + ' results.');
+      uniqueAssetIds.splice(MAX_ASSET_COUNT);
+    }
+    else {
+      showNotice(uniqueAssetIds.length + ' published files found.');
+    }
+
     var query = 'id:' + uniqueAssetIds.join(' OR id:');
     elvisContext.openSearch(query);
   }
@@ -129,7 +145,7 @@
   }
 
   /**
-   * Create facet options in SELECT
+   * Create facet options for SELECT elements
    * 
    * @param name Name of the SELECT element
    * @param facetFields Array of facetField objects
@@ -209,6 +225,10 @@
     return '<div class="statField"><span class="statFieldLabel">' + escapeHtml(field) + ':</span> <span class="statFieldValue">' + escapeHtml(value) + '</span></div>';
   }
 
+  function showNotice(message) {
+    $('.noticeBlock').html(message);
+  }
+
   function showCorrectPanel(forceOpenSearchPanel) {
     if (forceOpenSearchPanel || selectedHits.length == 0) {
       hide('.detailPanel');
@@ -239,8 +259,14 @@
     initDateFields();
 
     // Add event handlers for inputs, when an input changes, perform a search
-    $('#startDate').change(search);
-    $('#endDate').change(search);
+    $('#startDate').change(() => {
+      selectedFilterValues['startDate'] = $('#startDate').val();
+      search();
+    });
+    $('#endDate').change(() => {
+      selectedFilterValues['endDate'] = $('#endDate').val();
+      search();
+    });
     $('#brand').change(() => {
       selectedFilterValues['brand'] = $('#brand').val();
       selectedFilterValues['issue'] = '';
@@ -260,8 +286,18 @@
     });
     $('#resetLink').click(() => {
       selectedFilterValues = [];
+      $('#startDate').val('');
+      $('#endDate').val('');
       searchStats(true, true);
     });
+    $('#reportLink').click(() => {
+      var params = [];
+      for(paramName in selectedFilterValues) { 
+        params.push(paramName + '=' + encodeURIComponent(selectedFilterValues[paramName]));
+      }
+      var reportUrl = 'report.html?' + params.join('&');
+      window.open(reportUrl, '_blank');
+    })
 
     selectionUpdated();
     searchStats(false);
