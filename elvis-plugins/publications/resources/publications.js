@@ -51,8 +51,9 @@
    * Retrieve publication facets and optionally retrieve stats hits
    * 
    * @param retrieveHits Set to true to retrieve stats hits 
+   * @param clearSearch Set to true to forecfully clear the current search
    */
-  function searchStats(retrieveHits) {
+  function searchStats(retrieveHits, clearSearch) {
     
     // Gather search params
     var isFiltered = false;
@@ -78,7 +79,7 @@
       data: params,
       success: function (response) {
         if (retrieveHits) {
-          showHitsInClients(response.hits, !isFiltered);
+          showHitsInClients(response.hits, clearSearch || !isFiltered);
         }
         showFacets(response.facets);
       },
@@ -98,8 +99,10 @@
   function showHitsInClients(statsHits, clearSearch) {
     if (clearSearch) {
       elvisContext.openSearch('');
+      $('#totalStats').html();
       return;
     }
+    $('#totalStats').html('Publish count: ' + statsHits.length);  
     if (statsHits.length == 0) {
       // TODO: Not a really nice way to say we didn't find anything...
       elvisContext.openSearch('assetId:"nothingfound"');
@@ -253,6 +256,10 @@
     });
     $('.backToSearch').click(function () {
       showCorrectPanel(true);
+    });
+    $('#resetLink').click(function () {
+      selectedFilterValues = [];
+      searchStats(true, true);
     });
 
     selectionUpdated();

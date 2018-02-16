@@ -43,11 +43,23 @@ select {
   padding: 10px 20px;
 }
 
-.intro {
+.header {
   padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.intro {
   font-size: 14px;
   color: #666;
-  border-bottom: 1px solid #ccc;
+  float: left;
+}
+
+.link {
+  font-size: 12px;
+  font-weight: 700;
+  color: #009EE2;
+  float: right;
+  cursor: pointer;
 }
 
 .inputLabel {
