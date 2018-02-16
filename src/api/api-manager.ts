@@ -6,7 +6,6 @@ import { FolderSizeApi } from './folder-size-api';
 import { UsageApi } from './usage-api';
 import { PublishStats } from './publish-stats';
 import { PublishStatsSearch } from './publish-stats-search';
-import { PublishCategories } from './publish-categories';
 
 export class ApiManager {
 
@@ -42,6 +41,5 @@ export class ApiManager {
     new UsageApi(this.router, this.client).addRoute();
     new PublishStats(this.router, this.client).addRoute();
     new PublishStatsSearch(this.router, this.client).addRoute();
-    new PublishCategories(this.router, this.client).addRoute();
   }
 }
