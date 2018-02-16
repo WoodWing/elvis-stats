@@ -149,7 +149,7 @@
         selectedIdx = i;
         options += ' selected';
       }
-      options += '>' + escapeHtml(facet.name) + ' (&asymp;' + facet.count + ')</option>';
+      options += '>' + escapeHtml(facet.name) + ' (' + facet.count + ')</option>';
     }
     $('#' + name).html(options);
     return selectedIdx;

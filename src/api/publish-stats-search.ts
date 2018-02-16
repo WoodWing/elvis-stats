@@ -38,7 +38,8 @@ export class PublishStatsSearch extends PublishStatsBase {
 
       let uniqueAssetCount: any = {
         cardinality: {
-          field: 'assetId'
+          field: 'assetId',
+          precision_threshold: 5000
         }
       }
 
