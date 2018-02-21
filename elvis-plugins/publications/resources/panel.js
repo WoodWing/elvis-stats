@@ -1,31 +1,10 @@
 (function() {
-  const MAX_STATS_RESULT_COUNT = 10000;
-  const MAX_ASSET_COUNT = 900;
-  const BASE_URL = '/plugins/stats_api/publish';
- 
   var elvisApi;
   var elvisContext;
 
   var selectedFilterValues = [];
   var selectedHits;
   
-  var entityMap = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-    '/': '&#x2F;',
-    '`': '&#x60;',
-    '=': '&#x3D;'
-  };
-  
-  function escapeHtml (string) {
-    return String(string).replace(/[&<>"'`=\/]/g, (s) => {
-      return entityMap[s];
-    });
-  }
-
   /**
    * Initialize date search components
    */
@@ -70,12 +49,12 @@
     }
 
     // Size 0 will ensure only facets are returned (which is relevant when we don't have any filter selected)
-    params.size = isFiltered ? MAX_STATS_RESULT_COUNT : 0;
+    params.size = isFiltered ? StatsUtil.MAX_STATS_RESULT_COUNT : 0;
 
     // Query stats API
-    callStatsApi({
+    StatsUtil.callStatsApi({
       type: 'GET',
-      url: BASE_URL + '/statsSearch',
+      url: StatsUtil.BASE_URL + '/statsSearch',
       data: params,
       success: (response) => {
         if (retrieveHits) {
@@ -114,16 +93,10 @@
       }
       i++;
     }
-    // var uniqueAssetIds = statsHits.reduce((assetIds, statsHit) => { 
-    //   if (assetIds.indexOf(statsHit.assetId) > -1) {
-    //     assetIds.push(statsHit.assetId);
-    //   }
-    //   return assetIds;
-    // }, {});
 
-    if (uniqueAssetIds.length > MAX_ASSET_COUNT) {
-      showNotice(uniqueAssetIds.length + ' published files found, showing the top ' + MAX_ASSET_COUNT + ' results.');
-      uniqueAssetIds.splice(MAX_ASSET_COUNT);
+    if (uniqueAssetIds.length > StatsUtil.MAX_ASSET_COUNT) {
+      showNotice(uniqueAssetIds.length + ' published files found, showing the top ' + StatsUtil.MAX_ASSET_COUNT + ' results.');
+      uniqueAssetIds.splice(StatsUtil.MAX_ASSET_COUNT);
     }
     else {
       showNotice(uniqueAssetIds.length + ' published files found.');
@@ -156,12 +129,12 @@
     for (var i=0; i<facetFields.length; i++) {
       var facetField = facetFields[i];
       var facet = facetField[name] ? facetField[name] : facetField;
-      options += '<option value="' + escapeHtml(facet.name) + '"';
+      options += '<option value="' + StatsUtil.escapeHtml(facet.name) + '"';
       if (facet.name === selectedFilterValues[name]) {
         selectedIdx = i;
         options += ' selected';
       }
-      options += '>' + escapeHtml(facet.name) + ' (' + facet.count + ')</option>';
+      options += '>' + StatsUtil.escapeHtml(facet.name) + ' (' + facet.count + ')</option>';
     }
     $('#' + name).html(options);
     return selectedIdx;
@@ -181,7 +154,7 @@
   }
 
   /**
-   * Show stats details for the currently seledted panel
+   * Show stats details for the currently selected panel
    */
   function renderDetailPanel() {
     if (selectedHits.length !== 1) {
@@ -189,9 +162,9 @@
       return;
     }
     
-    callStatsApi({
+    StatsUtil.callStatsApi({
       type: 'GET',
-      url: BASE_URL + '/stats/' + selectedHits[0].id,
+      url: StatsUtil.BASE_URL + '/stats/' + selectedHits[0].id,
       success: (response) => {
         var html = response.map((hit) => {
           return '<div class="statRecord">'
@@ -206,15 +179,6 @@
     });
   }
 
-  function callStatsApi(params) {
-    params.contentType = 'application/json; charset=utf-8';
-    params.dataType = 'json';
-    params.error = (jqXHR, textStatus, error) => {
-      console.log('API request failed: ' + JSON.stringify(jqXHR));
-    };
-    $.ajax(params);
-  }
-
   /**
    * Render a single stats field-value pair
    */
@@ -222,7 +186,7 @@
     if (!value) {
       return '';
     }
-    return '<div class="statField"><span class="statFieldLabel">' + escapeHtml(field) + ':</span> <span class="statFieldValue">' + escapeHtml(value) + '</span></div>';
+    return '<div class="statField"><span class="statFieldLabel">' + StatsUtil.escapeHtml(field) + ':</span> <span class="statFieldValue">' + StatsUtil.escapeHtml(value) + '</span></div>';
   }
 
   function showNotice(message) {

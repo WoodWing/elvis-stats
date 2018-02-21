@@ -1,27 +1,6 @@
 (function() {
-  const MAX_STATS_RESULT_COUNT = 10000;
-  const MAX_ASSET_COUNT = 900;
-  const BASE_URL = '/plugins/stats_api/publish';
- 
   var elvisApi;
  
-  var entityMap = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-    '/': '&#x2F;',
-    '`': '&#x60;',
-    '=': '&#x3D;'
-  };
-  
-  function escapeHtml (string) {
-    return String(string).replace(/[&<>"'`=\/]/g, (s) => {
-      return entityMap[s];
-    });
-  }
-
   function renderReport() {
     var params = {};
     var urlParams = new URLSearchParams(window.location.search);
@@ -30,14 +9,14 @@
       params[urlParam[0]] = urlParam[1];
       searchHtml += renderFieldValue(urlParam[0], urlParam[1]);
     }
-    params.size = MAX_STATS_RESULT_COUNT;
+    params.size = StatsUtil.MAX_STATS_RESULT_COUNT;
     
     $('#searchParams').html(searchHtml);
     
     // Query stats API
-    callStatsApi({
+    StatsUtil.callStatsApi({
       type: 'GET',
-      url: BASE_URL + '/statsSearch',
+      url: StatsUtil.BASE_URL + '/statsSearch',
       data: params,
       success: (response) => {
         getHitDetails(response.hits);
@@ -83,22 +62,13 @@
     if (value.length > 50) {
       value = value.substr(0, 50) + '...';
     } 
-    return '<div class="statsField"><span class="statsFieldLabel">' + escapeHtml(field) + ':</span> <span class="statsFieldValue">' + escapeHtml(value) + '</span></div>';
+    return '<div class="statsField"><span class="statsFieldLabel">' + StatsUtil.escapeHtml(field) + ':</span> <span class="statsFieldValue">' + StatsUtil.escapeHtml(value) + '</span></div>';
   }
 
   function findHit(hits, assetId) {
     return hits.find((hit) => {
       return hit.id === assetId;
     })
-  }
-
-  function callStatsApi(params) {
-    params.contentType = 'application/json; charset=utf-8';
-    params.dataType = 'json';
-    params.error = (jqXHR, textStatus, error) => {
-      console.log('API request failed: ' + JSON.stringify(jqXHR));
-    };
-    $.ajax(params);
   }
 
   /**
