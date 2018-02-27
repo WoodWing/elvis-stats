@@ -57,7 +57,7 @@ The published in panel allows users to find which assets that were published. Ri
 Let's assume an asset is used in Print, on February 20th, 2018, for brand WW Magazine, Issue Feb-2018. In this case you could log this using the following request:
 
 ```bash
-$ curl -H "Content-Type: application/json" -H "Authorization: Bearer eyJ ... n9g" -X POST "http://localhost:8080/services/logUsage?assetId=6p2cZhM2KeX8OYGqhHis5u&action=CUSTOM_ACTION_PUBLISH&target=Print&brand=WW Magazine&issue=2018-Feb&publicationDate=2018-02-20"
+$ curl -H "Content-Type: application/json" -H "Authorization: Bearer eyJ ... n9g" -X POST "http://localhost:8080/services/logUsage?assetId=6p2cZhM2KeX8OYGqhHis5u&action=CUSTOM_ACTION_PUBLISH&target__s=Print&brand__s=WW Magazine&issue__s=2018-Feb&published__dt=2018-02-20"
 ```
 
 Now refreshing the panel would allow you to search on publication date, brand, issue and target. When you click on any of the assets, you will see it's publication details.
