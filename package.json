@@ -7,6 +7,10 @@
     "name": "WoodWing - Jaap van Blaaderen",
     "url": "https://www.woodwing.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WoodWing/elvis-stats.git"
+  },
   "engineStrict": true,
   "engines": {
     "node": ">= 6.9.0"
