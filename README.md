@@ -36,7 +36,7 @@ The stats API plugin helps with securing the stats API. It ensures that only aut
 - To prevent unauthorized access, snsure that only Elvis Server node(s) can access the stats server
 - Open the `elvis-plugins` folder.
 - Copy the `stats_api` folder to: `<Elvis Config>/plugins/active`.
-- Open `stats_api/action.config.xml`.
+- Open `stats_api/api.config.xml`.
 - Point the `url` setting to the stats server.
 - [Activate](https://helpcenter.woodwing.com/hc/en-us/articles/115002644606) the plugin.
 
