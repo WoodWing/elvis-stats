@@ -1,7 +1,7 @@
 class StatsUtil {
 
   static get BASE_URL() {
-    return '/plugins/stats_api/publish';
+    return '${serverUrl}/plugins/stats_api/publish';
   }
 
   static get MAX_STATS_RESULT_COUNT() {
