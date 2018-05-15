@@ -1,0 +1,53 @@
+<html>
+<head>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.7.2/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="resources/panel.css">
+
+	<script src="${pluginsBaseRootUrl}/web.shared/jquery.js" type="text/javascript"></script>
+	<script src="${pluginsBaseRootUrl}/web.shared/jquery.class.js" type="text/javascript"></script>
+	<script src="${pluginsBaseRootUrl}/web.shared/jquery.cookie.js" type="text/javascript"></script>
+	<script src="${pluginsBaseRootUrl}/web.shared/elvis_api/js/jquery.elvis.js" type="text/javascript"></script>
+	<script src="https://code.jquery.com/ui/1.7.2/jquery-ui.min.js"></script>
+	<script src="resources/stats-util.js"></script>
+	<script src="resources/panel.js"></script>
+</head>
+
+<body>
+
+	<div class="searchPanel">
+		<div class="header">
+			<div class="intro">Search published files</div>
+			<div class="link" id="resetLink">Clear all</div>
+		</div>
+		<form>
+			<div class="inputBlock">
+				<div class="inputLabel">Publication date</div>
+				<input type="text" id="startDate" placeholder="Start">
+				<input type="text" id="endDate" placeholder="End">
+			</div>
+			<div class="inputBlock">
+				<div class="inputLabel">Brand</div>
+				<select id="brand"></select>
+			</div>
+			<div class="inputBlock">
+				<div class="inputLabel">Target</div>
+				<select id="target"></select>
+			</div>
+			<div class="inputBlock">
+				<div class="inputLabel">Issue</div>
+				<select id="issue"></select>
+			</div>
+			<div class="noticeBlock">No search active</div>
+			<div class="summaryBlock">
+				<div class="link" id="reportLink">Open full report</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="detailPanel" style="display: none">
+		<div class="backToSearch">&larr; Search</div>
+		<div class="publishedIn"></div>
+	</div>
+
+</body>
+</html>

@@ -32,7 +32,7 @@
 		
 		function openSearch() {
 			let data = $(this).data();
-			elvisContext.openSearch(data.field + ':' + escapeHtml(data.fieldValue));
+			elvisContext.openSearch(data.field + ':"' + escapeHtml(data.fieldValue) + '"');
 		}
 		
 		function getHeader(field) {
