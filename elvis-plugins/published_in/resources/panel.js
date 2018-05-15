@@ -154,7 +154,7 @@
   }
 
   /**
-   * Show stats details for the currently selected panel
+   * Show stats details for the currently selected asset
    */
   function renderDetailPanel() {
     if (selectedHits.length !== 1) {
