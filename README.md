@@ -6,8 +6,9 @@ Elvis provides an out-of-the-box REST API which is useful for retrieving asset d
 Supported stats:
 - Folder stats (API + client plugin): Total size in bytes per sub-folder
 - Detect duplicates (API + client plugin): Duplicate report based on checksum, file name or file size.
-- Usage info (API): Usage stats over a period of time
+- Usage info (API): Usage stats over a period of time.
 - Published in (API + client plugins): Search and report where an asset is published (print, web, apps, social, etc).
+- User logins (API + client plugin): User logins report, shows the number of unique user logins in a specified period.
 
 # 2. Installation prerequisites
 
@@ -47,7 +48,7 @@ The stats API is now available through Elvis. For example, if your Elvis Server 
 After activation, the duplicate report plug-in is available in the top-right application menu]. The folder stats and published in are available as panel plug-in in the right-side of the screen.
 
 - Open the `elvis-plugins` folder.
-- Copy the `duplicate_report`, `folder_stats` and `published_in` folders to: `<Elvis Config>/plugins/active`.
+- Copy the `duplicate_report`, `folder_stats`, `published_in` and `user_logins` folders to: `<Elvis Config>/plugins/active`.
 - [Activate](https://helpcenter.woodwing.com/hc/en-us/articles/115002644606) the plugin.
 
 # 4. Using the published in panel (add logging data)
