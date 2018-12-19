@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<info>
+		<version>
+			<pluginVersion>1.0</pluginVersion>
+			<requiresAtLeast>6.7.0.0</requiresAtLeast>
+		</version>
+		<description>User logins report</description>
+		<documentationUrl></documentationUrl>
+	</info>
+	<action>
+		<url>${pluginUrl}/index.html</url>
+		
+		<icon16Url>${pluginUrl}/icon.svg</icon16Url>
+		<icon24Url>${pluginUrl}/icon.svg</icon24Url>
+
+		<userInterface>
+			<tab/>
+		</userInterface>
+
+		<menuAssignments>
+			<menuAssignment id="toolBar" order="1"/>
+		</menuAssignments>
+
+		<requiredRoles>
+			<role>ROLE_STATS</role>
+		</requiredRoles>
+
+		<messages>
+			<entries locale="en_US">
+				<entry key="title">User logins</entry>
+				<entry key="button.tooltip">User logins report</entry>
+			</entries>
+		</messages>
+
+	</action>
+</plugin>
