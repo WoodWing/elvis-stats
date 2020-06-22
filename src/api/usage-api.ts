@@ -50,9 +50,9 @@ export class UsageApi extends Api {
   public addRoute():void {
     this.router.get('/usage', (req:Request, res:Response) => {
 
-      let startDate:string = req.query.startDate ? req.query.startDate : '01-01-2010';
-      let endDate:string = req.query.endDate ? req.query.endDate : '01-01-2050';
-      let interval:string = req.query.interval ? req.query.interval : 'month';
+      let startDate:string = req.query.startDate ? req.query.startDate as string : '01-01-2010';
+      let endDate:string = req.query.endDate ? req.query.endDate as string : '01-01-2050';
+      let interval:string = req.query.interval ? req.query.interval as string : 'month';
       let intervalFormat:string = this.getIntervalFormat(interval);
       
       let query = {
