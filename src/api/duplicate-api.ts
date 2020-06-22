@@ -33,9 +33,10 @@ export class DuplicateApi extends Api {
 
   public addRoute():void {
     this.router.get('/detect-duplicates', (req:Request, res:Response) => {
-      let field:string = DuplicateApi.ALLOWED_FIELDS.includes(req.query.field) ? req.query.field : DuplicateApi.DEFAULT_FIELD;
-      let size:number = this.getSizeParam(req.query.size);
-      
+      let queryField:string = req.query.field as string
+      let field:string = DuplicateApi.ALLOWED_FIELDS.includes(queryField) ? queryField : DuplicateApi.DEFAULT_FIELD;
+      let size:number = this.getSizeParam(req.query.size as string);
+
       this.client.search({
         index: 'asset',
         type: 'asset',

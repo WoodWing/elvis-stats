@@ -10,7 +10,7 @@ export class PublishStatsSearch extends PublishStatsBase {
     this.router.get('/publish/statsSearch', (req: Request, res: Response) => {
 
       let params: any = req.query;
-      let size: number = this.getSizeParam(req.query.size, 50, 10000);
+      let size: number = this.getSizeParam(req.query.size as string, 50, 10000);
 
       /**
        * action - CUSTOM_ACTION_PUBLISH

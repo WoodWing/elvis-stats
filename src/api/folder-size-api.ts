@@ -34,7 +34,7 @@ export class FolderSizeApi extends Api {
   public addRoute():void {
     this.router.get('/folder-stats', this.checkRequiredParams(['folderPath']), (req:Request, res:Response) => {
 
-      let folderPath:string = req.query.folderPath.toLowerCase();
+      let folderPath:string = (req.query.folderPath as string).toLowerCase();
       let query:any;
       let includeRegEx:string;
       
@@ -64,8 +64,8 @@ export class FolderSizeApi extends Api {
         includeRegEx = '^' + this.escapeRegEx(folderPath) + '/[^/]+$';
       }
       
-      let size:number = this.getSizeParam(req.query.size);
     
+      let size:number = this.getSizeParam(req.query.size as string);
       this.client.search({
         index: 'asset',
         type: 'asset',
